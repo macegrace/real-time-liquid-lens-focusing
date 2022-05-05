@@ -1,3 +1,0 @@
-/home/martin/autofocus/real-time-liquid-lens-focusing/AutoFocusEmbedded/build/CMakeFiles/rebuild_cache.dir
-/home/martin/autofocus/real-time-liquid-lens-focusing/AutoFocusEmbedded/build/CMakeFiles/AutoFocusEmbedded.dir
-/home/martin/autofocus/real-time-liquid-lens-focusing/AutoFocusEmbedded/build/CMakeFiles/edit_cache.dir
