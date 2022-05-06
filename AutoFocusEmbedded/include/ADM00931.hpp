@@ -21,11 +21,11 @@
 
 class ADM00931 {
     private:
-        int i2c_fd;
+        int fileDescriptor;
         char filename[20];
 
     public:
         ADM00931();
         ~ADM00931();
-        void send_focus_value(int data);
+        void setValue(int data);
 };

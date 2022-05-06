@@ -52,7 +52,7 @@ int main() {
     	printf("Capturing image at focus point:  %i\n", data);
         
         focus.send_focus_value(data);
-    	cv::Mat image = video.get_image();
+    	cv::Mat image = video.getImage();
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
         // save image

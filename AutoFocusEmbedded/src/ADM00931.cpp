@@ -16,20 +16,20 @@ ADM00931::ADM00931() {
     
     snprintf(filename, MAX_FILENAME_LENGTH, "/dev/i2c-%d", ADAPTER_ADDR);
     
-    i2c_fd = open(filename, O_RDWR);
-    if(i2c_fd < 0)
+    fileDescriptor = open(filename, O_RDWR);
+    if(fileDescriptor < 0)
         throw(std::runtime_error("I2C : Unable to open adapter"));
-    if(ioctl(i2c_fd, I2C_SLAVE, I2C_ADDR) < 0)
+    if(ioctl(fileDescriptor, I2C_SLAVE, I2C_ADDR) < 0)
         throw(std::runtime_error("I2C : Invalid ioctl call"));
-    if(write(i2c_fd, "0", 1) != 1)
+    if(write(fileDescriptor, "0", 1) != 1)
         throw(std::runtime_error("I2C : Failed to write initializing value to file"));
 }
 
 ADM00931::~ADM00931() {
-    close(i2c_fd);
+    close(fileDescriptor);
 }
 
-void ADM00931::send_focus_value(int data) {
-    if(write(i2c_fd, &data, 1) != 1)
+void ADM00931::setValue(int data) {
+    if(write(fileDescriptor, &data, 1) != 1)
         throw(std::runtime_error("I2C : Unable to write to a value file"));
 }

@@ -17,27 +17,27 @@
 
 class VideoCapture {
     private:
-        int video_fd;
-        struct v4l2_buffer bufferinfo;
+        int videoFD;
+        struct v4l2_buffer bufferInfo;
         struct pollfd * mPFd;
-        void* buffer_start;
+        void* bufferStart;
         Trigger trigger;
 
-        void create_file_descriptor();
-        void set_trigger_mode();
-        void check_video_capture();
-        void set_caps();
-        void request_buffer();
-        void inform_about_buffer(v4l2_buffer * bufferinfo);
-        void map_buffer();
-        void activate_streaming(int type);
-        void deactivate_streaming(int type);
-        void queue_buffer(v4l2_buffer *bufferinfo);
-        void dequeue_buffer(v4l2_buffer *bufferinfo);
+        void createFileDescriptor();
+        void setTriggerMode();
+        void checkVideoCapture();
+        void setCaps();
+        void requestBuffer();
+        void informAboutBuffer(v4l2_buffer * bufferinfo);
+        void mapBuffer();
+        void activateStreaming(int type);
+        void deactivateStreaming(int type);
+        void queueBuffer(v4l2_buffer *bufferinfo);
+        void dequeueBuffer(v4l2_buffer *bufferinfo);
         
     public:
         VideoCapture();
         ~VideoCapture();
         
-        cv::Mat get_image();
+        cv::Mat getImage();
 };
