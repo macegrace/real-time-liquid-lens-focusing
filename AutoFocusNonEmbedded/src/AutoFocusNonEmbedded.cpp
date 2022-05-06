@@ -18,14 +18,15 @@
 #include "BackgroundProcessing.hpp"
 #include "CamControl.hpp"
 #include "Flexiboard.hpp"
+#include "ScoreFinder.hpp"
 
-int maxData, height, width, softCount, data = 0;
+int maxData = 0, height = 0, width = 0, softCount = 0, data = 0;
 int secondIterationData[15];
 
-double maxScore, score = 0;
+double maxScore = 0.0, score = 0.0;
 
 bool frameReady = true;
-bool firstIterationDone, exitProg, secondIteration = false;
+bool firstIterationDone = false, exitProg = false, secondIteration = false;
 
 const int maxDataValue = 65535;
 const int increment1 = maxDataValue / 25;
@@ -39,6 +40,7 @@ const int increment2 = 256;
 
 Flexiboard driver("/dev/ttyUSB0");
 idsCamera cam;
+ScoreFinder scoreFinder;
 
 void imageProcessing(cv::Mat frame){
 
@@ -49,17 +51,24 @@ void imageProcessing(cv::Mat frame){
     score = 0;
 
     if(!firstIterationDone)
-        driver.setValue(data + increment1);   
+        driver.setValue(data + increment1); 
         // write next value, before image processing, so the lens has enough time to re-focus
     
-    frame = frame(cv::Range(yMin, yMax), cv::Range(xMin, xMax)); // crop image for faster processing (square in the middle of the frame)
-    cv::Sobel(frame, sobel, CV_8UC1, 1, 0, 3, 4, 45);
     
-    meanTemp = cv::mean(sobel); // calculate mean of the edge detector output
-    mean = meanTemp.val[0];
-    score = mean;
+    frame = frame(cv::Range(yMin, yMax), cv::Range(xMin, xMax)); // crop image for faster processing (square in the middle of the frame)
+    
+    score = scoreFinder.calcSobelScore(frame);
 
-    // std::cout << "Image captured at focus data: " << data << "processed. Score: " << score << std::endl << std::endl;
+    //score = scoreFinder.calcLaplaceScore(frame);
+    //std::this_thread::sleep_for(std::chrono::milliseconds(80)); 
+
+    //score = scoreFinder.calcCannyScore(frame);
+    //std::this_thread::sleep_for(std::chrono::milliseconds(70));
+    
+    //score = scoreFinder.calcFFTScore(frame, 60); 
+    //std::this_thread::sleep_for(std::chrono::milliseconds(80));   
+    
+    std::cout << "Image captured at focus data: " << data << "processed. Score: " << score << std::endl << std::endl;
 
     if(score > maxScore) {
         maxScore = score;
@@ -103,7 +112,7 @@ void imageProcessing(cv::Mat frame){
             softCount++;
         }
         else {  // focusing finished
-            // exitProg = true;  // exit after finishing
+            exitProg = true;  // exit after finishing
             data = maxData;
             driver.setValue(maxData);
         }

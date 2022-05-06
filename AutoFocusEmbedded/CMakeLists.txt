@@ -11,8 +11,7 @@ set(SOURCES_AUTOFOCUS
     src/Trigger.cpp
     src/VideoCapture.cpp
     src/ADM00931.cpp
-    src/IFocusAlgorithm.cpp
-    src/FFTfocus.cpp
+    src/ScoreFinder.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES_AUTOFOCUS})

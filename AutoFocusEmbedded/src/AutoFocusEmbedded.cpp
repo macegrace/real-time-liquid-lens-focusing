@@ -15,7 +15,7 @@
 
 #include "VideoCapture.hpp"
 #include "ADM00931.hpp"
-#include "FFTfocus.hpp"
+#include "ScoreFinder.hpp"
 
 const unsigned int minData = 0;
 const unsigned int maxData = 255;
@@ -30,7 +30,7 @@ int main() {
 
     VideoCapture video;
     ADM00931 focus;
-    FFTfocus algo;
+    ScoreFinder scoreFinder;
     cv::Mat image, image_orig, max_image, rect1, rect2, rect3, rect4;
     
     cv::namedWindow("focused", cv::WINDOW_NORMAL);
@@ -73,7 +73,9 @@ int main() {
         //algo.calculate(image);
         //score = algo.result.score;
         
-        cv::Mat sobel;
+        score = scoreFinder.calcSobelScore(image, 3, 4, 45);
+
+        /*cv::Mat sobel;
         cv::Sobel(image, sobel, CV_8UC1, 1, 0, 3, 4, 45);
         cv::Scalar temp = cv::mean(sobel);
         float mean = temp.val[0];
@@ -84,7 +86,7 @@ int main() {
         temp = cv::mean(sobel);
         mean = temp.val[0];
 
-        score += mean;
+        score += mean;*/
         
         cout << "Score : " << score << "\n\n";
         

@@ -14,6 +14,7 @@
 #include <stdbool.h>
 #include <thread>
 #include <opencv2/opencv.hpp>
+#include "ScoreFinder.hpp"
 
 #define MAX_DATA 255
 
@@ -34,10 +35,6 @@ string generate_filename(string set, int data) {
 
 int main() {
 
-    string set = "SET_15cm";
-    //cout << "Type in the name of set to be used: ";
-    //cin >> set;
-
     int data = 0;
     int count = 0;
     int increment = 10;
@@ -45,37 +42,31 @@ int main() {
     int max_data_save = 0;
     double max_score = 0;
     int max_data = 0;
-
+    ScoreFinder scoreFinder;
     Mat image;
+
+    string set;
+    cout << "Type in the name of set to be used: ";
+    cin >> set;
 
     namedWindow("focused", WINDOW_NORMAL);
     resizeWindow("focused", 1024, 768);
     
-    data = increment;
+    data = 1;
     auto begin = std::chrono::high_resolution_clock::now();
 
-    cout << useOptimized() << endl;
-
-    while(count < MAX_DATA / increment) {
+    while(count < (MAX_DATA / increment) + 1) {
         
-        score = 0;
+        if(count == 1)
+            data -= 1;
+
+        score = 0.0;
         
         image = (imread(generate_filename(set, data)));
         image = image(Range(340,740), Range(760,1160));
         cout << "Image acquired at focus value: " << data << endl;
         
-        //Mat sobel;
-        Sobel(image, image, CV_8UC1, 1, 0, 3, 4, 45);
-        Scalar temp = cv::mean(image);
-        float mean = temp.val[0];
-        score += mean;
-        
-        /*
-        Sobel(image, sobel, CV_8UC1, 0, 1, 3, 4, 45);
-        temp = cv::mean(sobel);
-        mean = temp.val[0];
-        score += mean;
-        */
+        score = scoreFinder.calcSobelScoreOverX(image, 3, 4, 45);
 
         if(score > max_score) {
             max_score = score;
@@ -101,38 +92,20 @@ int main() {
                 diff += 1;
                 continue;
             }
-            values_to_scan[i] = max_data + diff;
+            values_to_scan[i] = max_data + diff + 1;
             diff += 1;
         }
     }
-    else if(max_data >= 247) {
-        values_to_scan[0] = 240;
-        values_to_scan[1] = 241;
-        values_to_scan[2] = 242;
-        values_to_scan[3] = 243;
-        values_to_scan[4] = 244;
-        values_to_scan[5] = 245;
-        values_to_scan[6] = 246;
-        values_to_scan[7] = 247;
-        values_to_scan[8] = 248;
-        values_to_scan[9] = 249;
+    else if(max_data == 250) {
+        for(int i = 0; i < 10; i++)
+            values_to_scan[i] = i + 245;
     }
-    else if(max_data <= 8) {
-        values_to_scan[0] = 1;
-        values_to_scan[1] = 2;
-        values_to_scan[2] = 3;
-        values_to_scan[3] = 4;
-        values_to_scan[4] = 5;
-        values_to_scan[5] = 6;
-        values_to_scan[6] = 7;
-        values_to_scan[7] = 8;
-        values_to_scan[8] = 9;
-        values_to_scan[9] = 10;
+    else if(max_data == 1) {
+        for(int i = 0; i < 10; i++)
+            values_to_scan[i] = i + 1;
     }
 
-        
     count = 0;
-
     while(count < 10) {
         
         score = 0;
@@ -146,20 +119,14 @@ int main() {
         Scalar temp = cv::mean(image);
         float mean = temp.val[0];
 
-        score += mean;
+        score = scoreFinder.calcSobelScoreOverX(image, 3, 4, 45);
         
-        /*
-        Sobel(image, sobel, CV_8UC1, 0, 1, 3, 4, 45);
-        temp = cv::mean(sobel);
-        mean = temp.val[0];
-        */
-
         score += mean;
         cout << "Score : " << score << "\n\n";
 
         if(score > max_score) {
             max_score = score;
-            max_data = values_to_scan[count - 1];
+            max_data = values_to_scan[count];
         }
         
         count++;
@@ -174,7 +141,5 @@ int main() {
     //imshow("focused", image);
     //waitKey(0);
     
-    cout << getBuildInformation() << endl;
-
     return 0;
 }

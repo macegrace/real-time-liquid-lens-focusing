@@ -15,6 +15,7 @@ set(SOURCES_IDS
     src/Flexiboard.cpp
     src/SerialPort.cpp
     src/CamControl.cpp
+    src/ScoreFinder.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES_IDS})

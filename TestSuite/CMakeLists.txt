@@ -17,6 +17,7 @@ set(SOURCES_TEST_SETS
 
 set(SOURCES_AUTOFOCUS_NO_CAM
     src/AutoFocusNoCam.cpp
+    src/ScoreFinder.cpp
 )
 
 add_executable(${TEST_SETS} ${SOURCES_TEST_SETS})
