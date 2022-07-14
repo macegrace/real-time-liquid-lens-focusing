@@ -1,1 +1,12 @@
-Liquid Lens Camera Auto-Focus project
+Liquid Lens Camera Auto-Focus Implementation
+
+The source code was implemented as part of Bachelors Thesis - Real Time Liuqid Lens Focusing.
+
+https://www.fit.vut.cz/study/thesis/24805/.en
+
+The thesis compares the traditional electro-mechanical lenses to their liquid alternatives.
+Its primary concern is finding the exact figures about how faster the liquid lenses focus.
+
+The auto-focus algorithm is a very basic one, as it is only used as an example for the comparison.
+
+Overall the thesis proved, that focusing with liquid lens is several times faster in any tested scenario.
